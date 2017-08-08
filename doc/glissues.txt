@@ -1,0 +1,23 @@
+*glissues.txt*  Gitlab Issue Plugin
+
+Author: sirjofri <https://github.com/sirjofri/>
+
+INTRODUCTION                                                       *glissues*
+
+You want to access gitlab issues from within vim? With this plugin you can
+access your issues. They are listed in a new buffer, but it requires vim
+version 8 and curl.
+
+COMMANDS                                                  *glissues-commands*
+
+|:GLOpenIssues|         Opens your open issues in a new buffer. Provided
+                      details are issue id (used for closing and commenting to
+                      issues via commit), title and description.
+
+ABOUT                                                        *glissues-about*
+
+This software will be hosted on GitHub:
+
+https://github.com/sirjofri/vim-glissues
+
+vim:tw=78:et:ts=8:sw=2:ft=help:norl:
