@@ -46,6 +46,8 @@ Commands
   issue id (used for closing and commenting to issues via commit), title and
   description.
 - `:GLOpenIssuesExt` Extended version of `:GLOpenIssues`, loads comments, too.
+- `:GLClosedIssues` and `:GLClosedIssuesExt` behave similar with closed
+  issues.
 
 Roadmap
 -------

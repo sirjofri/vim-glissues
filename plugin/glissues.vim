@@ -86,8 +86,18 @@ function! <SID>GLOpenIssuesExt()
 	call s:LoadIssues("opened", v:true)
 endfunction
 
+function! <SID>GLClosedIssues()
+	call s:LoadIssues("closed", v:false)
+endfunction
+
+function! <SID>GLClosedIssuesExt()
+	call s:LoadIssues("closed", v:true)
+endfunction
+
 command! GLOpenIssues :call <SID>GLOpenIssues()
 command! GLOpenIssuesExt :call <SID>GLOpenIssuesExt()
+command! GLClosedIssues :call <SID>GLClosedIssues()
+command! GLClosedIssuesExt :call <SID>GLClosedIssuesExt()
 
 
 " folding stolen from tpope... again

@@ -17,6 +17,9 @@ COMMANDS                                                  *glissues-commands*
 |:GLOpenIssuesExt|      Same as |:GLOpenIssues| but loads comments, too. This
                       will take some time.
 
+|:GLClosedIssues[Ext]|  Like the commands |:GLOpenIssues| and |:GLOpenIssuesExt|,
+                      loads and shows closed issues.
+
 ABOUT                                                        *glissues-about*
 
 This software will be hosted on GitHub:
