@@ -45,13 +45,14 @@ Commands
 - `:GLOpenIssues` Opens your open issues in a new buffer. Provided details are
   issue id (used for closing and commenting to issues via commit), title and
   description.
+- `:GLOpenIssuesExt` Extended version of `:GLOpenIssues`, loads comments, too.
 
 Roadmap
 -------
 
 - Create new issue
 - Close issue (without commit)
-- View issue details (eg. comments)
+- View issue details (eg. <s>comments</s>)
 - Comment to issue
 
 License

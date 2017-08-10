@@ -14,6 +14,9 @@ COMMANDS                                                  *glissues-commands*
                       details are issue id (used for closing and commenting to
                       issues via commit), title and description.
 
+|:GLOpenIssuesExt|      Same as |:GLOpenIssues| but loads comments, too. This
+                      will take some time.
+
 ABOUT                                                        *glissues-about*
 
 This software will be hosted on GitHub:

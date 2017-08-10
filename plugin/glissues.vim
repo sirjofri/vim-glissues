@@ -27,20 +27,43 @@ endif
 
 " Section: Loading of issues is done here
 "
-function! s:LoadIssues(state)
+function! s:LoadIssues(state, notes)
 	let l:command = "curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues?state=".a:state
 	echo "Trying to fetch data from server: ".g:gitlab_server."\n"
 	let l:json = system(l:command)
 	let l:data = json_decode(l:json)
+	echo "Issue Data fetched. Loading Notes...\n"
 
 	let l:collection = []
 	for l:iss in l:data
-		let l:collection += [ "#".l:iss["iid"]."\t".l:iss["title"]."\n\n".l:iss["description"] ]
+
+		if a:notes
+			let l:notes = []
+			let l:notescommand = "curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues/".l:iss["iid"]."/notes"
+			let l:notesjson = system(l:notescommand)
+			let l:notesdata = json_decode(l:notesjson)
+			for l:note in l:notesdata
+				let l:notes += [ "* ".l:note["author"]["username"].":\n".l:note["body"] ]
+			endfor
+			
+			let l:notesout = join(l:notes, "\n")
+		else
+			let l:notesout = "not loaded"
+		endif
+
+		let l:collection += [ "#".l:iss["iid"]."\t".l:iss["title"]."\n\n".l:iss["description"]."\n\nComments:\n".l:notesout ]
 	endfor
 
 	let l:output = join(l:collection, "\n\n;;\n")
 	
-	new
+	if !exists("g:gl_issues_bufnr")
+		new
+		setlocal switchbuf=useopen,usetab
+		let g:gl_issues_bufnr = bufnr("%")
+	else
+		execute "sb".g:gl_issues_bufnr
+	endif
+
 	setlocal buftype=nofile
 	execute "normal i".output
 	normal gg
@@ -58,7 +81,12 @@ function! <SID>GLOpenIssues()
 	call s:LoadIssues("opened")
 endfunction
 
+function! <SID>GLOpenIssuesExt()
+	call s:LoadIssues("opened", v:true)
+endfunction
+
 command! GLOpenIssues :call <SID>GLOpenIssues()
+command! GLOpenIssuesExt :call <SID>GLOpenIssuesExt()
 
 
 " folding stolen from tpope... again
