@@ -62,6 +62,7 @@ function! s:LoadIssues(state, notes)
 		let g:gl_issues_bufnr = bufnr("%")
 	else
 		execute "sb".g:gl_issues_bufnr
+		normal ggVGd
 	endif
 
 	setlocal buftype=nofile
@@ -78,7 +79,7 @@ endfunction
 " Section: Mappings
 "
 function! <SID>GLOpenIssues()
-	call s:LoadIssues("opened")
+	call s:LoadIssues("opened", v:false)
 endfunction
 
 function! <SID>GLOpenIssuesExt()
