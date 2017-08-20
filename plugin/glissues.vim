@@ -28,7 +28,7 @@ endif
 " Section: Loading of issues is done here
 "
 function! s:LoadIssues(state, notes)
-	let l:command = "curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues?state=".a:state
+	let l:command = "sh -c \"curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues?state=".a:state."\""
 	echo "Trying to fetch data from server: ".g:gitlab_server."\n"
 	let l:json = system(l:command)
 	let l:data = json_decode(l:json)
@@ -39,7 +39,7 @@ function! s:LoadIssues(state, notes)
 
 		if a:notes
 			let l:notes = []
-			let l:notescommand = "curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues/".l:iss["iid"]."/notes"
+			let l:notescommand = "sh -c \"curl -s --header 'PRIVATE-TOKEN: ".g:gitlab_token."' ".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues/".l:iss["iid"]."/notes\""
 			let l:notesjson = system(l:notescommand)
 			let l:notesdata = json_decode(l:notesjson)
 			for l:note in l:notesdata
