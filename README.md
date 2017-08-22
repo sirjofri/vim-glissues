@@ -6,7 +6,7 @@ Introduction
 
 You want to access gitlab issues from within vim? With this plugin you can
 access your issues. They are listed in a new buffer, but it requires vim
-version 8 and curl.
+version 8 (json stuff) and curl.
 
 Installation
 ------------
@@ -24,6 +24,9 @@ You need to setup the following global vim variables:
 - `g:gitlab_server_port`: Defaults to 443
 - `g:gitlab_projectid`: Your project ID. You get this via gitlabs web
   interface (project settings).
+- (`g:gitlab_alter`): Should the plugin send altering requests to the server?
+  (default true)
+- (`g:gitlab_debug`): Print debug messages
 
 For example I have in my `.vimrc`:
 
@@ -48,11 +51,13 @@ Commands
 - `:GLOpenIssuesExt` Extended version of `:GLOpenIssues`, loads comments, too.
 - `:GLClosedIssues` and `:GLClosedIssuesExt` behave similar with closed
   issues.
+- `:GLNewIssue` let's you create a new issue with a formular. (`:GLSave` to
+  save it)
 
 Roadmap
 -------
 
-- Create new issue
+- <s>Create new issue</s>
 - Close issue (without commit)
 - View issue details (eg. <s>comments</s>)
 - Comment to issue

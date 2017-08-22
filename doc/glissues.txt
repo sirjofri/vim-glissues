@@ -6,7 +6,7 @@ INTRODUCTION                                                       *glissues*
 
 You want to access gitlab issues from within vim? With this plugin you can
 access your issues. They are listed in a new buffer, but it requires vim
-version 8 and curl.
+version 8 (json stuff) and curl.
 
 COMMANDS                                                  *glissues-commands*
 
@@ -19,6 +19,9 @@ COMMANDS                                                  *glissues-commands*
 
 |:GLClosedIssues[Ext]|  Like the commands |:GLOpenIssues| and |:GLOpenIssuesExt|,
                       loads and shows closed issues.
+
+|:GLNewIssue|           Opens a new window with a form. You can fill in the
+                      form and save this data to the server with |:GLSave|.
 
 ABOUT                                                        *glissues-about*
 

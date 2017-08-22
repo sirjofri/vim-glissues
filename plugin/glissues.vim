@@ -25,6 +25,14 @@ if !exists("g:gitlab_projectid")
 	let g:gitlab_projectid = "0"
 endif
 
+if !exists("g:gitlab_alter")
+	let g:gitlab_alter = v:true
+endif
+
+if !exists("g:gitlab_debug")
+	let g:gitlab_debug = v:false
+endif
+
 " Section: Loading of issues is done here
 "
 function! s:LoadIssues(state, notes)
@@ -75,6 +83,82 @@ function! s:LoadIssues(state, notes)
 	setlocal syntax=markdown
 endfunction
 
+" Section: Create a new issue
+"
+" Text will appear before the actual form
+let s:pre_formular = "Fill in the form. The \"Title\" field is required, everything else is\noptional. Do __not__ remove the separating space!\nThe \"Description\" field can be multiline.\nUse `:GLSave` to send data to your gitlab server.\n"
+" Number of lines in the form preamble
+let s:pre_formular_count = 6
+
+" Name of the fields
+let s:title = "Title:"
+let s:description = "Description:"
+let s:confidential = "Confidential (true|false):"
+let s:labels = "Labels:"
+let s:due = "Due Date (YYYY-MM-DD):"
+
+" Opens the NewIssue window
+function! s:NewIssue()
+	if !exists("g:gl_newissue_bufnr")
+		new
+		setlocal switchbuf=useopen,usetab
+		setlocal buftype=nofile
+		syntax on
+		setlocal syntax=markdown
+		let g:gl_newissue_bufnr = bufnr("%")
+		command! -buffer GLSave :call s:SaveIssue()
+	else
+		execute "sb".g:gl_issues_bufnr
+		normal ggVGd
+	endif
+
+	" create formular
+	let l:formular = s:title." \n".s:description." \n".s:confidential." false\n".s:labels." \n".s:due." "
+
+	" write formular
+	execute "normal i".s:pre_formular
+	normal G
+	execute "normal o".l:formular
+	execute "normal ".s:pre_formular_count."G$"
+	startinsert!
+endfunction
+
+" Send the filled form to the gitlab server
+function! s:SaveIssue()
+	if exists("g:gl_newissue_bufnr")
+		execute "sb".g:gl_newissue_bufnr
+
+		let l:title = substitute(getline(search("^".s:title)), "^".s:title." ", "", "")
+		let l:description = substitute(join(getline(search("^".s:description), search("^".s:confidential)-1), "\n"), "^".s:description." ", "", "")
+		let l:confidential = substitute(getline(search("^".s:confidential)), "^".s:confidential." ", "", "")
+		let l:labels = substitute(getline(search("^".s:labels)), "^".s:labels." ", "", "")
+		let l:due = substitute(getline(search("^".s:due)), "^".s:due." ", "", "")
+
+		" debug messages
+		if g:gitlab_debug
+			echo l:title
+			echo l:description
+			echo l:confidential
+			echo l:labels
+			echo l:due
+		endif
+
+		let l:command = "sh -c \"curl --request POST --header 'PRIVATE-TOKEN: ".g:gitlab_token."' -G '".g:gitlab_server.":".g:gitlab_server_port."/api/v4/projects/".g:gitlab_projectid."/issues' --data-urlencode 'title=".l:title."' --data-urlencode 'description=".l:description."' --data-urlencode 'confidential=".l:confidential."' --data-urlencode 'labels=".l:labels."' --data-urlencode 'due_date=".l:due."'\""
+		echo l:command
+
+		if g:gitlab_alter
+			let l:response = system(l:command)
+			echo l:response
+		endif
+
+		" close buffer window
+		execute "sb".g:gl_newissue_bufnr
+		execute "q!"
+	else
+		echo "No formular found!"
+	endif
+endfunction
+
 
 " Section: Mappings
 "
@@ -94,10 +178,15 @@ function! <SID>GLClosedIssuesExt()
 	call s:LoadIssues("closed", v:true)
 endfunction
 
+function! <SID>GLNewIssue()
+	call s:NewIssue()
+endfunction
+
 command! GLOpenIssues :call <SID>GLOpenIssues()
 command! GLOpenIssuesExt :call <SID>GLOpenIssuesExt()
 command! GLClosedIssues :call <SID>GLClosedIssues()
 command! GLClosedIssuesExt :call <SID>GLClosedIssuesExt()
+command! GLNewIssue :call <SID>GLNewIssue()
 
 
 " folding stolen from tpope... again
