@@ -22,7 +22,21 @@ if !exists("g:gitlab_server_port")
 endif
 
 if !exists("g:gitlab_projectid")
-	let g:gitlab_projectid = "0"
+	" try to fetch id from git remote
+	let s:pid_smallurl = substitute(g:gitlab_server, 'https:\/\/', "", "")
+	let s:pid_remote_result = split(system('git remote -v | grep "'.s:pid_smallurl.'"'), '\n')
+
+	" if some repository uses the server url (without https://)
+	if exists("s:pid_remote_result[0]")
+		let s:pid_remote_line = s:pid_remote_result[0]
+		let s:pid_parsed = substitute(s:pid_remote_line, '^.\+\t\%(.\+@'.substitute(s:pid_smallurl, '\.', '\\.', '').':\|https\?:\/\/'.substitute(s:pid_smallurl, '\.', '\\.', '').'\%(:443\)\?\/\)\(.\+\)\/\(.\+\)\.git.*$', '\1%2F\2', "g")
+
+		" set project id (user/repo urlencoded style)
+		let g:gitlab_projectid = s:pid_parsed
+	else
+		" set non-existing project id
+		let g:gitlab_projectid = "0"
+	endif
 endif
 
 if !exists("g:gitlab_alter")
