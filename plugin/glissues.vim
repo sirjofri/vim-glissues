@@ -29,7 +29,7 @@ if !exists("g:gitlab_projectid")
 	" if some repository uses the server url (without https://)
 	if exists("s:pid_remote_result[0]")
 		let s:pid_remote_line = s:pid_remote_result[0]
-		let s:pid_parsed = substitute(s:pid_remote_line, '^.\+\t\%(.\+@'.substitute(s:pid_smallurl, '\.', '\\.', '').':\|https\?:\/\/'.substitute(s:pid_smallurl, '\.', '\\.', '').'\%(:443\)\?\/\)\(.\+\)\/\(.\+\)\.git.*$', '\1%2F\2', "g")
+		let s:pid_parsed = substitute(s:pid_remote_line, '^.\+\t\%(.\+@'.substitute(s:pid_smallurl, '\.', '\\.', '').':\|https\?:\/\/'.substitute(s:pid_smallurl, '\.', '\\.', '').'\%(:'.g:gitlab_server_port.'\)\?\/\)\(.\+\)\/\(.\+\)\.git.*$', '\1%2F\2', "g")
 
 		" set project id (user/repo urlencoded style)
 		let g:gitlab_projectid = s:pid_parsed
