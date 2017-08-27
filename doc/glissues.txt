@@ -12,7 +12,7 @@ COMMANDS                                                  *glissues-commands*
 
 |:GLOpenIssues|         Opens your open issues in a new buffer. Provided
                       details are issue id (used for closing and commenting to
-                      issues via commit), title and description.
+                      issues via commit), title, description and milestone.
 
 |:GLOpenIssuesExt|      Same as |:GLOpenIssues| but loads comments, too. This
                       will take some time.

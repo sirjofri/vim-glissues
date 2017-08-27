@@ -56,13 +56,28 @@ function! s:LoadIssues(state, notes)
 			
 			let l:notesout = join(l:notes, "\n")
 		else
-			let l:notesout = "not loaded"
+			let l:notesout = "Not loaded. Use `:GLOpenIssuesExt` to load comments."
 		endif
 
-		let l:collection += [ "#".l:iss["iid"]."\t".l:iss["title"]."\n\n".l:iss["description"]."\n\nComments:\n".l:notesout ]
+		" milestone: no milestone or milestone data
+		let l:milestone = l:iss["milestone"]
+		let l:milestonetext = ""
+		if exists("l:milestone['iid']")
+			let l:ms_id = l:milestone['iid']
+			let l:ms_title = l:milestone['title']
+			let l:milestonetext = "\nMilestone: %".l:ms_id." ".l:ms_title
+		endif
+
+		" description placeholder or real data
+		let l:desctext = "no description"
+		if l:iss["description"] != ""
+			let l:desctext = l:iss["description"]
+		endif
+
+		let l:collection += [ "#".l:iss["iid"]."\t".l:iss["title"].l:milestonetext."\n\n".l:desctext."\n\nComments:\n".l:notesout ]
 	endfor
 
-	let l:output = join(l:collection, "\n\n;;\n")
+	let l:output = join(l:collection, "\n\n")
 	
 	if !exists("g:gl_issues_bufnr")
 		new
@@ -77,7 +92,7 @@ function! s:LoadIssues(state, notes)
 	execute "normal i".output
 	normal gg
 	setlocal foldmethod=expr
-	setlocal foldexpr=getline(v\:lnum)=~'^#'?'>1'\:getline(v\:lnum)=~'^;;'?'<1':1
+	setlocal foldexpr=getline(v\:lnum)=~'^#'?'>1'\:getline(v\:lnum)=~'^#'?'<1':1
 	setlocal foldtext=getline(v:foldstart)
 	syntax on
 	setlocal syntax=markdown
