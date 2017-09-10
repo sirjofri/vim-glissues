@@ -183,6 +183,7 @@ function! s:SaveIssue()
 		" close buffer window
 		execute "sb".g:gl_newissue_bufnr
 		execute "q!"
+		unlet g:gl_newissue_bufnr
 	else
 		echo "No formular found!"
 	endif
