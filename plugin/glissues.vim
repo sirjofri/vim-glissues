@@ -149,7 +149,6 @@ function! s:NewIssue()
 	normal G
 	execute "normal o".l:formular
 	execute "normal ".s:pre_formular_count."G$"
-	startinsert!
 endfunction
 
 " Send the filled form to the gitlab server
